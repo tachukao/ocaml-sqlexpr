@@ -38,7 +38,7 @@ let parse str =
   let esc_list = ref [] in
   let esc_str = "<SQLEXPR_PRESERVED>" in
   let esc_subst substrings =
-    let mtch = Re.get substrings 0 in
+    let mtch = Re.Group.get substrings 0 in
     esc_list := mtch :: !esc_list;
     esc_str in
 
@@ -49,13 +49,13 @@ let parse str =
   let inrgx = Re.Pcre.regexp {|%([dlLfsSba])(\?)?|} in
   let outrgx = Re.Pcre.regexp {|@([dlLfsSba])(\?)?\{([^}]+)\}|} in
   let getin (acc : input list) s =
-    let groups = Re.get_all s in
+    let groups = Re.Group.all s in
     let typ = Array.get groups 1 |> str2typ in
     let optional = "?" = Array.get groups 2 in
     let res = typ, optional in
     res::acc in
   let getout (acc : output list) s =
-    let groups = Re.get_all s in
+    let groups = Re.Group.all s in
     let typ = Array.get groups 1 |> str2typ in
     let optional = "?" = Array.get groups 2 in
     let name = Array.get groups 3 |> String.trim in
